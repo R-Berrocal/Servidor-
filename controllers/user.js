@@ -27,7 +27,7 @@ const getUsuarios = async (req = request, res = response) => {
 
   res.json({
     total,
-    usuarios,
+    usuarios:usuarios.sort(((a,b)=>b.puntaje-a.puntaje)),
   });
 };
 const postUsuarios = async (req = request, res = response) => {
@@ -72,10 +72,38 @@ const putUsuarios = async (req, res) => {
       });
 
 };
+const deleteUsuarios = async (req, res) => {
+  const { ip } = req.params;
+ 
+  if(!ip){
+    return res.status(400).json({
+      err: "El ip está vacio"
+    })
+  }
+  let user= await User.findOne({ip});
+
+  if(!user){
+    return res.status(400).json({
+      msg: `El usuario con ip ${ip} no existe`
+    })
+  }
+      
+      const {nombre, puntaje }=req.body; 
+      const usuario = await User.findOneAndDelete({ip},{nombre,puntaje} );
+      res.json({
+        
+        usuario,
+        msg:"usuario borrado correctamente"
+      });
+
+};
+ 
+
 
 module.exports = {
   getUsuarios,
   getUsuario,
   postUsuarios,
-  putUsuarios
+  putUsuarios,
+  deleteUsuarios
 }
