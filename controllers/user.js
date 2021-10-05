@@ -3,12 +3,12 @@ let IP = require("ip");
 
 const User = require("../models/usuario");
 const getUsuario= async(req,res)=>{
-  const { ip } = req.params;
-  const usuario = await User.findOne({ip});
+  const { id } = req.params;
+  const usuario = await User.findById(id);
 
   if(!usuario){
     return res.status(400).json({
-      msg: `El usuario con ip ${ip} no existe`
+      msg: `El usuario con id ${id} no existe`
     })
   }
 
@@ -31,16 +31,11 @@ const getUsuarios = async (req = request, res = response) => {
   });
 };
 const postUsuarios = async (req = request, res = response) => {
-  const ip=IP.address();
-  const ipExiste= await User.findOne({ip});
-  if(ipExiste){
-    return res.status(400).json({
-      msg: `El usuario con ip ${ip} ya existe en la base de datos`
-    })
-  }
+  
+  
   const { nombre,puntaje } = req.body;
   
-  const usuario = new User({ ip, nombre,puntaje });
+  const usuario = new User({  nombre,puntaje });
 
 
   //Guardar en DB
@@ -50,50 +45,50 @@ const postUsuarios = async (req = request, res = response) => {
   });
 };
 const putUsuarios = async (req, res) => {
-  const { ip } = req.params;
+  const { id } = req.params;
  
-  if(!ip){
+  if(!id){
     return res.status(400).json({
-      err: "El ip está vacio"
+      err: "El id está vacio"
     })
   }
-  let user= await User.findOne({ip});
+  const user= await User.findById(id);
 
   if(!user){
-    return res.status(400).json({
-      msg: `El usuario con ip ${ip} no existe`
+    return res.status(404).json({
+      msg: `El usuario con id ${id} no existe en la DB`
     })
   }
       
       const {nombre, puntaje }=req.body; 
-      const usuario = await User.findOneAndUpdate({ip},{nombre,puntaje} );
+      const usuario = await User.findByIdAndUpdate(id,{nombre,puntaje} );
       res.json({
         usuario
       });
 
 };
 const deleteUsuarios = async (req, res) => {
-  const { ip } = req.params;
+  const { id } = req.params;
  
-  if(!ip){
+  if(!id){
     return res.status(400).json({
-      err: "El ip está vacio"
+      err: "El id está vacio"
     })
   }
-  let user= await User.findOne({ip});
+  let user= await User.findById(id);
 
   if(!user){
-    return res.status(400).json({
-      msg: `El usuario con ip ${ip} no existe`
+    return res.status(404).json({
+      msg: `El usuario con id ${id} no existe`
     })
   }
       
       const {nombre, puntaje }=req.body; 
-      const usuario = await User.findOneAndDelete({ip},{nombre,puntaje} );
+      const usuario = await User.findByIdAndDelete(id,{nombre,puntaje} );
       res.json({
         
-        usuario,
-        msg:"usuario borrado correctamente"
+        msg:"usuario borrado correctamente",
+        usuario
       });
 
 };

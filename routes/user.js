@@ -12,7 +12,7 @@ const {
 } = require("../controllers/user");
 
 router.get("/", getUsuarios);
-router.get("/:ip", getUsuario);
+router.get("/:id" ,[check("id","No es un id de mongo").isMongoId(),validarCampos], getUsuario);
 router.post(
   "/",
   [
@@ -23,13 +23,15 @@ router.post(
   postUsuarios
 );
 router.put(
-  "/:ip",
-  [check("ip", "no puede estar vacia"), validarCampos],
+  "/:id",
+  [check("id", "no puede estar vacia"),
+   check("id","No es un id de mongo").isMongoId(), validarCampos],
   putUsuarios
 );
 
-router.delete("/:ip", 
+router.delete("/:id", 
 [
-  check("ip", "no puede estar vacia"),validarCampos
+  check("id", "no puede estar vacia"),
+  check("id","No es un id de mongo").isMongoId(),validarCampos
 ],deleteUsuarios);
 module.exports = router;
