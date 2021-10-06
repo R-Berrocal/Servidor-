@@ -3,12 +3,12 @@ let IP = require("ip");
 
 const User = require("../models/usuario");
 const getUsuario= async(req,res)=>{
-  const { id } = req.params;
-  const usuario = await User.findById(id);
+  const { nombre } = req.params;
+  const usuario = await User.findOne({nombre});
 
   if(!usuario){
     return res.status(400).json({
-      msg: `El usuario con id ${id} no existe`
+      msg: `El usuario con nombre ${nombre} no existe`
     })
   }
 
@@ -88,7 +88,7 @@ const deleteUsuarios = async (req, res) => {
       res.json({
         
         msg:"usuario borrado correctamente",
-        usuario
+        usuario 
       });
 
 };

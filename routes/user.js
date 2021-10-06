@@ -12,7 +12,7 @@ const {
 } = require("../controllers/user");
 
 router.get("/", getUsuarios);
-router.get("/:id" ,[check("id","No es un id de mongo").isMongoId(),validarCampos], getUsuario);
+router.get("/:nombre" ,[check("nombre","No puede estar vacia"),validarCampos], getUsuario);
 router.post(
   "/",
   [
