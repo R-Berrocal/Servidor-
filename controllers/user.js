@@ -34,7 +34,11 @@ const postUsuarios = async (req = request, res = response) => {
   
   
   const { nombre,puntaje } = req.body;
-  
+  if(User.findOne(nombre)){
+    return res.status(400).json({
+      msg: "ya existe un usuario en la base de datos con el  nombre: "+nombre
+    })
+  }
   const usuario = new User({  nombre,puntaje });
 
 
